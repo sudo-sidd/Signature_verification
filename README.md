@@ -193,35 +193,6 @@ Edit `index.html` to:
 - Add new features to the SignatureCanvas class
 - Customize layout and components
 
-## Troubleshooting
-
-### Common Issues
-
-1. **"Model loading failed"**
-   - Ensure internet connection for initial model download
-   - Check available disk space (2GB+ recommended)
-
-2. **"Canvas drawing failed"**
-   - Ensure JavaScript is enabled in your browser
-   - Try refreshing the page if canvas doesn't load
-   - Check browser console for JavaScript errors
-
-3. **"Signature too small or unclear"**
-   - Draw signatures larger on the canvas
-   - Use clear, bold strokes
-   - Avoid very thin or light lines
-
-4. **"Low verification scores"**
-   - Draw signatures consistently with similar style
-   - Use the same drawing speed and pressure
-   - Ensure canvas signatures are clear and well-defined
-   - Practice drawing your signature similarly each time
-
-### Performance Tips
-
-- Use SSD storage for better database performance
-- Close other applications to free up RAM for TensorFlow
-- Use GPU acceleration if available (install tensorflow-gpu)
 
 ## Development and Learning
 
@@ -243,24 +214,6 @@ Edit `index.html` to:
    - Base64 image data conversion
    - Responsive drawing interfaces
 
-### Extension Ideas
-
-1. **Advanced Features**:
-   - Signature comparison visualization
-   - Batch verification
-   - User authentication system
-   - Signature expiration dates
-
-2. **ML Improvements**:
-   - Custom CNN training on signature datasets
-   - Data augmentation for better accuracy
-   - Multiple verification algorithms
-
-3. **UI Enhancements**:
-   - Dark mode support
-   - Progressive Web App (PWA) features
-   - Advanced drawing tools (pen thickness, colors)
-   - Signature animation and pressure sensitivity
 
 ## License
 
