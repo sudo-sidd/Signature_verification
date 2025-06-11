@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Verification Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: #dbeafe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-count {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-blue {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        .btn-blue:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn-green {
+            background-color: #16a34a;
+            color: white;
+        }
+        
+        .btn-green:hover {
+            background-color: #15803d;
+        }
+        
+        .btn-purple {
+            background-color: #9333ea;
+            color: white;
+        }
+        
+        .btn-purple:hover {
+            background-color: #7c3aed;
+        }
+        
+        .canvas-container {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            margin: 1rem 0;
+        }
+        
+        .signature-canvas {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: crosshair;
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            height: 150px;
+        }
+        
+        .signature-canvas:hover {
+            border-color: #3b82f6;
+        }
+        
+        .canvas-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .canvas-status {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .btn-clear {
+            padding: 0.5rem 1rem;
+            background: #e5e7eb;
+            color: #374151;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-clear:hover {
+            background: #d1d5db;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .back-btn {
+            display: flex;
+            align-items: center;
+            color: #2563eb;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover {
+            color: #1d4ed8;
+        }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .message-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .message-error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .table th {
+            background: #f9fafb;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .table tr:hover {
+            background: #f9fafb;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .results {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .results-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .results-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .status-verified {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        
+        .status-failed {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .confidence-high {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        
+        .confidence-medium {
+            color: #ca8a04;
+            font-weight: bold;
+        }
+        
+        .confidence-low {
+            color: #dc2626;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Home Page -->
+        <div id="home-page">
+            <div class="container">
+                <div class="header">
+                    <div class="icon">🔐</div>
+                    <h1 class="title">Signature Verification Portal</h1>
+                    <p class="subtitle">Secure digital signature creation and verification using AI</p>
+                    <p class="user-count">Currently managing <span id="user-count">0</span> registered signatures</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-icon">✍️</div>
+                        <h3 class="card-title">Draw Signature</h3>
+                        <p class="card-description">Draw your signature directly on screen to create a secure digital profile</p>
+                        <button class="btn btn-blue" onclick="showPage('create')">Draw Signature</button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">🔍</div>
+                        <h3 class="card-title">Verify Signature</h3>
+                        <p class="card-description">Draw a signature to verify its authenticity using AI matching</p>
+                        <button class="btn btn-green" onclick="showPage('verify')">Verify Signature</button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">👥</div>
+                        <h3 class="card-title">View Users</h3>
+                        <p class="card-description">Browse all registered users and their signature information</p>
+                        <button class="btn btn-purple" onclick="showPage('users')">View Users</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Create Signature Page -->
+        <div id="create-page" class="hidden">
+            <div class="page-container">
+                <a class="back-btn" onclick="showPage('home')">← Back to Home</a>
+                
+                <div class="card">
+                    <h2 style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Draw Your Digital Signature</h2>
+                    
+                    <div id="create-message"></div>
+                    
+                    <form id="create-form">
+                        <div class="form-group">
+                            <label class="label">Full Name *</label>
+                            <input type="text" id="create-name" class="input" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="label">Draw Your Signature *</label>
+                            <div class="canvas-container">
+                                <canvas id="create-canvas" class="signature-canvas" width="400" height="150"></canvas>
+                                <div class="canvas-controls">
+                                    <span id="create-canvas-status" class="canvas-status">Draw your signature above</span>
+                                    <button type="button" class="btn-clear" onclick="clearCanvas('create-canvas')">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-blue" id="create-submit">Save Signature</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Verify Signature Page -->
+        <div id="verify-page" class="hidden">
+            <div class="page-container">
+                <a class="back-btn" onclick="showPage('home')">← Back to Home</a>
+                
+                <div class="card">
+                    <h2 style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Verify Signature</h2>
+                    
+                    <div id="verify-message"></div>
+                    
+                    <form id="verify-form">
+                        <div class="form-group">
+                            <label class="label">Name *</label>
+                            <input type="text" id="verify-name" class="input" placeholder="Enter name to verify against" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="label">Draw Signature to Verify *</label>
+                            <div class="canvas-container">
+                                <canvas id="verify-canvas" class="signature-canvas" width="400" height="150"></canvas>
+                                <div class="canvas-controls">
+                                    <span id="verify-canvas-status" class="canvas-status">Draw the signature you want to verify</span>
+                                    <button type="button" class="btn-clear" onclick="clearCanvas('verify-canvas')">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-green" id="verify-submit">Verify Signature</button>
+                    </form>
+                    
+                    <div id="verify-results" class="hidden results">
+                        <h3 class="results-title">Verification Results</h3>
+                        <div id="results-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Users Page -->
+        <div id="users-page" class="hidden">
+            <div class="page-container">
+                <a class="back-btn" onclick="showPage('home')">← Back to Home</a>
+                
+                <div class="card">
+                    <h2 style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Registered Users</h2>
+                    
+                    <div id="users-content">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
+                            <p style="color: #6b7280;">Loading users...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentPage = 'home';
+        let canvasData = {};
+        let users = [];
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('App initializing...');
+            initializeCanvases();
+            fetchUsers();
+            setupEventListeners();
+        });
+        
+        // Show/hide pages
+        function showPage(page) {
+            // Hide all pages
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('create-page').classList.add('hidden');
+            document.getElementById('verify-page').classList.add('hidden');
+            document.getElementById('users-page').classList.add('hidden');
+            
+            // Show requested page
+            document.getElementById(page + '-page').classList.remove('hidden');
+            currentPage = page;
+            
+            // Page-specific actions
+            if (page === 'users') {
+                loadUsers();
+            } else if (page === 'create') {
+                clearCanvas('create-canvas');
+            } else if (page === 'verify') {
+                clearCanvas('verify-canvas');
+                document.getElementById('verify-results').classList.add('hidden');
+            }
+        }
+        
+        // Initialize canvases
+        function initializeCanvases() {
+            ['create-canvas', 'verify-canvas'].forEach(canvasId => {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                canvasData[canvasId] = {
+                    canvas: canvas,
+                    ctx: ctx,
+                    isDrawing: false,
+                    hasSignature: false
+                };
+                
+                setupCanvasEvents(canvasId);
+            });
+        }
+        
+        // Setup canvas events
+        function setupCanvasEvents(canvasId) {
+            const data = canvasData[canvasId];
+            const canvas = data.canvas;
+            
+            // Mouse events
+            canvas.addEventListener('mousedown', (e) => startDrawing(e, canvasId));
+            canvas.addEventListener('mousemove', (e) => draw(e, canvasId));
+            canvas.addEventListener('mouseup', () => stopDrawing(canvasId));
+            canvas.addEventListener('mouseleave', () => stopDrawing(canvasId));
+            
+            // Touch events
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            });
+            
+            canvas.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                const mouseEvent = new MouseEvent('mouseup', {});
+                canvas.dispatchEvent(mouseEvent);
+            });
+        }
+        
+        // Canvas drawing functions
+        function getEventPos(e, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+        
+        function startDrawing(e, canvasId) {
+            const data = canvasData[canvasId];
+            const pos = getEventPos(e, data.canvas);
+            data.isDrawing = true;
+            data.ctx.beginPath();
+            data.ctx.moveTo(pos.x, pos.y);
+        }
+        
+        function draw(e, canvasId) {
+            const data = canvasData[canvasId];
+            if (!data.isDrawing) return;
+            
+            const pos = getEventPos(e, data.canvas);
+            data.ctx.lineTo(pos.x, pos.y);
+            data.ctx.stroke();
+            
+            data.hasSignature = true;
+            updateCanvasStatus(canvasId);
+        }
+        
+        function stopDrawing(canvasId) {
+            canvasData[canvasId].isDrawing = false;
+        }
+        
+        function clearCanvas(canvasId) {
+            const data = canvasData[canvasId];
+            data.ctx.fillStyle = '#ffffff';
+            data.ctx.fillRect(0, 0, data.canvas.width, data.canvas.height);
+            data.hasSignature = false;
+            updateCanvasStatus(canvasId);
+        }
+        
+        function updateCanvasStatus(canvasId) {
+            const statusId = canvasId + '-status';
+            const statusElement = document.getElementById(statusId);
+            if (statusElement) {
+                statusElement.textContent = canvasData[canvasId].hasSignature ? 
+                    'Signature drawn' : 
+                    (canvasId.includes('create') ? 'Draw your signature above' : 'Draw the signature you want to verify');
+            }
+        }
+        
+        // Form event listeners
+        function setupEventListeners() {
+            document.getElementById('create-form').addEventListener('submit', handleCreateSubmit);
+            document.getElementById('verify-form').addEventListener('submit', handleVerifySubmit);
+        }
+        
+        // Handle create signature form
+        async function handleCreateSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('create-name').value;
+            const canvas = canvasData['create-canvas'];
+            
+            if (!name || !canvas.hasSignature) {
+                showMessage('create-message', 'error', 'Please enter your name and draw your signature');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('create-submit');
+            submitBtn.innerHTML = '<span class="spinner loading"></span>Processing...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Convert canvas to blob
+                const blob = await new Promise(resolve => {
+                    canvas.canvas.toBlob(resolve, 'image/png');
+                });
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', `${name.toLowerCase().replace(/\s+/g, '.')}@signature.local`);
+                formData.append('signature', blob, 'signature.png');
+                
+                // Submit to server
+                const response = await fetch('/create-signature', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('create-message', 'success', data.message);
+                    document.getElementById('create-name').value = '';
+                    clearCanvas('create-canvas');
+                    fetchUsers();
+                } else {
+                    showMessage('create-message', 'error', data.detail || 'An error occurred');
+                }
+                
+            } catch (error) {
+                showMessage('create-message', 'error', 'Network error. Please try again.');
+            } finally {
+                submitBtn.innerHTML = 'Save Signature';
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Handle verify signature form
+        async function handleVerifySubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('verify-name').value;
+            const canvas = canvasData['verify-canvas'];
+            
+            if (!name || !canvas.hasSignature) {
+                showMessage('verify-message', 'error', 'Please enter name and draw your signature');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('verify-submit');
+            submitBtn.innerHTML = '<span class="spinner loading"></span>Verifying...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Convert canvas to blob
+                const blob = await new Promise(resolve => {
+                    canvas.canvas.toBlob(resolve, 'image/png');
+                });
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('email', `${name.toLowerCase().replace(/\s+/g, '.')}@signature.local`);
+                formData.append('signature', blob, 'signature.png');
+                
+                // Submit to server
+                const response = await fetch('/verify-signature', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('verify-message', '', '');
+                    showVerificationResults(data);
+                } else {
+                    showMessage('verify-message', 'error', data.message || data.detail || 'Verification failed');
+                    document.getElementById('verify-results').classList.add('hidden');
+                }
+                
+            } catch (error) {
+                showMessage('verify-message', 'error', 'Network error. Please try again.');
+                document.getElementById('verify-results').classList.add('hidden');
+            } finally {
+                submitBtn.innerHTML = 'Verify Signature';
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Show verification results
+        function showVerificationResults(data) {
+            const resultsDiv = document.getElementById('verify-results');
+            const contentDiv = document.getElementById('results-content');
+            
+            const statusClass = data.is_match ? 'status-verified' : 'status-failed';
+            const statusText = data.is_match ? '✅ VERIFIED' : '❌ NOT VERIFIED';
+            
+            let confidenceClass = 'confidence-low';
+            if (data.confidence >= 85) confidenceClass = 'confidence-high';
+            else if (data.confidence >= 70) confidenceClass = 'confidence-medium';
+            
+            contentDiv.innerHTML = `
+                <div class="results-item">
+                    <span>Status:</span>
+                    <span class="${statusClass}">${statusText}</span>
+                </div>
+                <div class="results-item">
+                    <span>User:</span>
+                    <span>${data.user_name}</span>
+                </div>
+                <div class="results-item">
+                    <span>Confidence:</span>
+                    <span class="${confidenceClass}">${data.confidence}%</span>
+                </div>
+                <div class="results-item">
+                    <span>Threshold:</span>
+                    <span>${data.threshold}%</span>
+                </div>
+            `;
+            
+            resultsDiv.classList.remove('hidden');
+        }
+        
+        // Show message
+        function showMessage(messageId, type, text) {
+            const messageDiv = document.getElementById(messageId);
+            if (!text) {
+                messageDiv.innerHTML = '';
+                return;
+            }
+            
+            const className = type === 'success' ? 'message message-success' : 'message message-error';
+            messageDiv.innerHTML = `<div class="${className}">${text}</div>`;
+        }
+        
+        // Fetch users from server
+        async function fetchUsers() {
+            try {
+                const response = await fetch('/users');
+                const data = await response.json();
+                if (data.success) {
+                    users = data.users;
+                    document.getElementById('user-count').textContent = users.length;
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+        
+        // Load users page
+        function loadUsers() {
+            const contentDiv = document.getElementById('users-content');
+            
+            if (users.length === 0) {
+                contentDiv.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem; color: #9ca3af;">👤</div>
+                        <p style="color: #6b7280;">No users registered yet.</p>
+                        <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.5rem;">Create your first signature to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const tableHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Signature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => `
+                            <tr>
+                                <td>${user.name}</td>
+                                <td><span class="badge">✓ Registered</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            contentDiv.innerHTML = tableHTML;
+        }
+    </script>
+</body>
+</html>
